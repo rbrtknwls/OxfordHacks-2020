@@ -29,7 +29,7 @@ app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname + '/index.html'));
 })
 app.get('/sign-in', function (req, res) {
-  res.sendFile(path.join(__dirname + '/pages/auth.html'));
+  res.sendFile(path.join(__dirname + '/pages/map.html'));
 });
 app.get('/profile', function (req, res) {
   res.sendFile(path.join(__dirname + '/pages/profile.html'));
