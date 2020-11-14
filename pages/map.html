@@ -29,21 +29,33 @@
 <script>
 var socket = io.connect();
 socket.on('connect', () => {
+  // provided that the platform and the map are instantiated.
 
   var platform = new H.service.Platform({
-    'apikey': 'S1dt8SMv3sH4PkRx-xnow1BZ6H4Mrj2nn3nZyzTn2MQ'
+    'apikey': 'tDcN_f_fBqXmJjJn9zo1ljOc4DsXdB6grTAAE91t9Bo'
   });
+  const service = platform.getXYZService({
+    token: 'AOJw_eE1TdWCkyF1ZXJHPAA'
+  });
+
   // Obtain the default map types from the platform object:
   var defaultLayers = platform.createDefaultLayers();
 
-  // Instantiate (and display) a map object:
+  // create a provider for the public buildings data
+  const buildingsSpaceProvider = new H.service.xyz.Provider(service, 'PFOE8xNq', {
+    'min': 14
+  });
+  const buildingsSpaceLayer = new H.map.layer.TileLayer(buildingsSpaceProvider);
+  // add a layer to the map
+
   var map = new H.Map(
     document.getElementById('mapContainer'),
     defaultLayers.vector.normal.map,
     {
-      zoom: 10,
-      center: { lat: 52.5, lng: 13.4 }
+      zoom: 8,
+      center: { lat: 43.6, lng: -79.3 }
     });
+    map.addLayer(buildingsSpaceLayer);
     // Enable the event system on the map instance:
     var mapEvents = new H.mapevents.MapEvents(map);
 
@@ -57,7 +69,6 @@ socket.on('connect', () => {
     var behavior = new H.mapevents.Behavior(mapEvents);
 
   });
-
 
 
 
