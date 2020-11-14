@@ -43,7 +43,7 @@ socket.on('connect', () => {
 
   // create a provider for the public buildings data
   const buildingsSpaceProvider = new H.service.xyz.Provider(service, 'PFOE8xNq', {
-    'min': 14
+    'min': 10
   });
   const buildingsSpaceLayer = new H.map.layer.TileLayer(buildingsSpaceProvider);
   // add a layer to the map
