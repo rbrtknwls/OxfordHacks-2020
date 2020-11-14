@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html>
+   <head>
+        <title>Profile</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+   </head>
+   <script src="js/main.js"></script>
+   <script src="/socket.io/socket.io.js"></script>
+   <body>
+
+     <div class = "UserListHead card" >
+       <div class="d-flex">
+          <div class="mr-auto p-3 " style ="margin-left: 5px">
+            <h2> Users </h2>
+          </div>
+          <div class="p-3">
+            <h3> Sort by: </h3>
+          </div>
+          <div class="p-3">
+            <select class="form-control">
+              <option>Everyone</option>
+              <option>Similar Classes</option>
+            </select>
+          </div>
+          <div class="p-2">
+            <a class="btn btn-side btn-lg" href = "dashboard" style = "text-decoration-color: white" href="#" role="button">Refresh</a>
+          </div>
+       </div>
+     </div>
+     <div id = "usersrow">
+
+
+     </div>
+
+   </body>
+   <script>
+     var socket = io.connect();
+
+     var userid = getUserId()
+
+     socket.on('connect', () => {
+
+       if (cookieCheck()){
+
+         socket.emit('getUsers', socket.id);
+
+         socket.on('postUsers', function(users){
+           var all_users = Object.values(users);
+           for (var index = 0; index < all_users.length; index++){
+            createUserCard(all_users[index].name, all_users[index].email, all_users[index].class_1, all_users[index].class_2, all_users[index].club_1, "usersrow");
+           }
+         });
+
+       } else {
+         authFail();
+       }
+     });
+
+   </script>
+
+</html>
