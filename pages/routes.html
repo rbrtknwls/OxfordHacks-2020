@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<html>
+   <head>
+        <title>Profile</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+   </head>
+   <script src="js/main.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+   <body>
+
+
+     <div class="centerdiv">
+         <div class="jumbotron">
+           <div class="row">
+             <div class="col-md-8">
+                 <div class = "col">
+                     <h3 class="display-3" id = "disname"><strong>Random Name</strong></h3>
+                     <p class="display-4" id = "useranme">UnsetUsername</p>
+                 </div>
+
+             </div>
+             <div class="col-md-3">
+               <div class="card-body">
+                   <img src="https://i.picsum.photos/id/668/200/200.jpg?hmac=mVqr1fc4nHFre2QMZp5cuqUKLIRSafUtWt2vwlA9jG0" id = "pers" style = "top: 0px; object-fit: cover; border-radius: 50%; border: 1px solid" height = "200px" width = "200px"alt="...">
+               </div>
+             </div>
+           </div>
+           <hr style = "border: 20px solid">
+           <div class="d-flex">
+             <div class="p-3">
+               <h3> Class 1: </h3>
+             </div>
+             <div class="p-3">
+               <select  id = "class_1" class="form-control">
+                 <option>Math</option>
+                 <option>Science</option>
+               </select>
+             </div>
+              <div class="p-3">
+                <h3> Class 2: </h3>
+              </div>
+              <div class="p-3">
+                <select id = "class_2" class="form-control">
+                  <option>History</option>
+                  <option>French</option>
+                </select>
+              </div>
+              <div class="p-3">
+                <h3> Club 1: </h3>
+              </div>
+              <div class="p-3">
+                <select id = "club_1" class="form-control">
+                  <option>Fencing</option>
+                  <option>Cooking</option>
+                </select>
+              </div>
+           </div>
+           <div class="d-flex">
+             <div class="mr-auto p-3">
+              <button class="btn btn-side btn-lg" id = "submitButton" style = "text-decoration-color: white">Submit Changes</button>
+             </div>
+             <div class="p-3">
+               <a class="btn btn-side btn-lg" href = "dashboard" style = "text-decoration-color: white" role="button">Dashboard</a>
+             </div>
+           </div>
+         </div>
+       </div>
+
+   </body>
+   <script>
+
+
+     var socket = io.connect();
+
+     var userid = getUserId();
+     socket.on('connect', () => {
+       if (cookieCheck()){
+         socket.emit('getInfo', userid, socket.id);
+
+         socket.on('postInfo', function(info){
+           console.log(info);
+           document.getElementById("disname").innerHTML = info.name;
+           document.getElementById("useranme").innerHTML = info.email;
+
+         });
+
+         document.getElementById('submitButton').onclick = function() {
+            socket.emit('updateInfo', checkFormState(), getUserId(), socket.id);
+         };
+
+       } else {
+         authFail();
+       }
+     });
+
+
+
+   </script>
+
+</html>
