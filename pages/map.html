@@ -43,11 +43,13 @@ socket.on('connect', () => {
   useres[0] = '161 University Ave W, Waterloo, ON';
   useres[2] = '1151 Richmond St, London, ON';
 
+  locs = []
+  geos = []
+  summary = []
 
   storeGeoData(useres);
 
-   locs = []
-   geos = []
+
 
   function getGeoData(){
     socket.emit("getgeodata", socket.id)
@@ -63,45 +65,69 @@ socket.on('connect', () => {
 
     setTimeout(function(){
       makerouts(geos);
+      setTimeout(function(){
+        console.log(summary);
+      },200);
     }, 3000);
 
   }
 
+
   function storeGeoData(lop){
 
-    socket.emit('clearloccash');
+    var given = -1
+    for (var i = 0; i < lop.length; i++){
 
-    for (var i = 0; i < useres.length; i++){
-      socket.emit('storeloc', lop[i]);
+      locs.push(lop[i])
       serv.geocode({
-        q: useres[i],
+        q: locs[i],
       }, (result) => {
         // Add a marker for each location found
         result.items.forEach((item) => {
-          socket.emit('storegeocode', item.position);
+          setTimeout(function(){
+            given++;
+            geos[given] = item.position;
+          }, 500);
         });
 
       }, alert);
     }
-    setTimeout(function(){ getGeoData(); }, 3000);
+
+    setTimeout(function(){
+      socket.emit('storeloc', locs);
+      socket.emit('storegeocode', geos);
+
+      setTimeout(function(){
+        getGeoData();
+      }, 2000);
+    }, 2000);
+
 
   }
+
+  function storepoint(point){
+    socket.emit('storeloc', point);
+
+  }
+
+
+
+
 
   var targetElement = document.getElementById('mapContainer');
   var defaultLayers = platform.createDefaultLayers();
 
   function makerouts (loclist){
+    console.log(loclist);
+    summary = []
     for (var i = 0; i < (loclist.length - 1); i++){
 
-       var randomColor = "#"+Math.floor(Math.random()*16777215).toString(16);
-       makeroute(loclist[i],loclist[i+1],randomColor);
+      var randomColor = "#"+Math.floor(Math.random()*16777215).toString(16);
+      makeroute(loclist[i],loclist[i+1],randomColor);
     }
   }
 
   function makeroute (loc1, loc2, col){
-
-    console.log(loc1)
-    console.log(loc2)
 
     var stringloc1 = loc1.lat + ',' +  loc1.lng
     var stringloc2 = loc2.lat + ',' +  loc2.lng
@@ -109,6 +135,7 @@ socket.on('connect', () => {
     console.log(stringloc1)
 
     var routingParameters = {
+      'time': "2020-04-28T19:06:00+02:00",
       // The start point of the route:
       'origin': stringloc1,
       // The end point of the route:
@@ -122,7 +149,15 @@ socket.on('connect', () => {
     var onResult = function(result) {
       // ensure that at least one route was found
       if (result.routes.length) {
+
         result.routes[0].sections.forEach((section) => {
+          summary.push({
+            start_place: section.arrival.place,
+            start_time: section.arrival.time,
+            end_place: section.departure.place,
+            end_time: section.departure.time,
+            type: section.type
+          })
           // Create a linestring to use as a point source for the route line
           let linestring = H.geo.LineString.fromFlexiblePolyline(section.polyline);
 
@@ -167,7 +202,7 @@ socket.on('connect', () => {
       // resolving relative URLs in the style like textures, fonts.
       // all referenced resources relative to the base path https://js.api.here.com/v3/3.1/styles/omv.
       var style = new H.map.Style('darkstyle.yaml',
-        'https://js.api.here.com/v3/3.1/styles/omv/');
+      'https://js.api.here.com/v3/3.1/styles/omv/');
       // set the style on the existing layer
       provider.setStyle(style);
     }
