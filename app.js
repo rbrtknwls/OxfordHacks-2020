@@ -5,6 +5,7 @@ var path = require('path');
 var fs = require('fs');
 var atob = require('atob')
 var im = require('imagemagick');
+var Promise = require('promise');
 var Chart = require('chart.js');
 
 // CONSTANTS AND API KEYS
@@ -66,17 +67,19 @@ io.on('connection', function(socket){
   });
 
   socket.on('storeloc', function(place_loc){
-    locations = place_loc;
+      locations.push(place_loc);
   });
 
   socket.on('storegeocode', function(place_geocode){
-    geocode = place_geocode;
+      geocode.push(place_geocode);
+
   });
 
   socket.on('getgeodata', function(sender){
     console.log("--GeoData Request--");
     console.log(locations);
     console.log(geocode);
+
     io.to(sender).emit('postgeodata', [locations, geocode]);
   });
 
