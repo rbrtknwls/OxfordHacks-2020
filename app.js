@@ -50,14 +50,19 @@ app.get('/dashboard', function (req, res) {
 server.listen(PORT);
 console.log("CHECKING PORT " + PORT)
 var RANDUSERSNUM = 10;
-locations = [];
-geocode = [];
+var summary = []
+var locations = [];
+var geocode = [];
 
 io.on('connection', function(socket){
 
   socket.on('clearloccash', function(){
     locations = [];
     geocode = [];
+  });
+
+  socket.on('storesummary', function(sum){
+    summary = sum;
   });
 
   socket.on('storeloc', function(place_loc){
@@ -73,6 +78,14 @@ io.on('connection', function(socket){
     console.log(locations);
     console.log(geocode);
     io.to(sender).emit('postgeodata', [locations, geocode]);
+  });
+
+  socket.on('getsummary', function(sender){
+    console.log("--Summary Request--");
+    for (var i = 0; i < summary.length; i++){
+        console.log(summary);
+    }
+    io.to(sender).emit('postsumdata', summary);
   });
 
 });

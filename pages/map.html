@@ -67,6 +67,7 @@ socket.on('connect', () => {
       makerouts(geos);
       setTimeout(function(){
         console.log(summary);
+        socket.emit("storesummary", socket.id)
       },200);
     }, 3000);
 
@@ -76,6 +77,7 @@ socket.on('connect', () => {
   function storeGeoData(lop){
 
     var given = -1
+
     for (var i = 0; i < lop.length; i++){
 
       locs.push(lop[i])
@@ -119,15 +121,14 @@ socket.on('connect', () => {
 
   function makerouts (loclist){
     console.log(loclist);
-    summary = []
     for (var i = 0; i < (loclist.length - 1); i++){
-
+      summary[i] = []
       var randomColor = "#"+Math.floor(Math.random()*16777215).toString(16);
-      makeroute(loclist[i],loclist[i+1],randomColor);
+      makeroute(loclist[i],loclist[i+1],randomColor, i);
     }
   }
 
-  function makeroute (loc1, loc2, col){
+  function makeroute (loc1, loc2, col, tab){
 
     var stringloc1 = loc1.lat + ',' +  loc1.lng
     var stringloc2 = loc2.lat + ',' +  loc2.lng
@@ -151,7 +152,7 @@ socket.on('connect', () => {
       if (result.routes.length) {
 
         result.routes[0].sections.forEach((section) => {
-          summary.push({
+          summary[tab].push({
             start_place: section.arrival.place,
             start_time: section.arrival.time,
             end_place: section.departure.place,
