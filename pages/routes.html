@@ -48,15 +48,18 @@
 
   <script>
 
-
 //Line Graph
+
   var socket = io.connect();
+  var traffic = [1,1,2,2,3,4,5,6,7,8,9,123,213,312,12,123,
+    152,632,193,139,110,238,520,1]
+  var list = [];
+  colours(traffic);
 
   socket.on('connect', () => {
-    var traffic = [1,1,2,2,3,4,5,6,7,8,9,123,213,1312,12]
     var ctx = document.getElementById('traffic').getContext('2d');
     var linegraph = new Chart(ctx, {
-      type: 'line',
+      type: 'bar',
       data: {
         labels: ['1 AM', '2 AM', '3 AM', '4 AM', '5 AM', '6 AM', '7 AM', '8 AM',
         '9 AM', '10 AM', '11 AM', '12 PM', '1 PM', '2 PM', '3 PM', '4 PM',
@@ -64,22 +67,8 @@
         datasets: [{
           label: 'Traffic Measure',
           data: traffic,
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)'
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)'
-          ],
+          backgroundColor: list,
+          borderColor: list,
           borderWidth: 1
         }]
       },
@@ -94,6 +83,8 @@
       }
     });
   });
+
+
 
 //Interactive Map
   var socket = io.connect();
@@ -143,7 +134,7 @@
     var times = [1312,12]
     var ctx = document.getElementById('time').getContext('2d');
     var piegraph = new Chart(ctx, {
-      type: 'pie',
+      type: 'doughnut',
       data: {
         labels: ['Time Spent Walking','Time Spent in Transit'],
         datasets: [{
@@ -167,18 +158,27 @@
           ],
           borderWidth: 1
         }]
-      },
-      options: {
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            }
-          }]
-        }
       }
     });
 
+function colours(traffic){
+  var total = 0;
+  for (var i = 0; i < traffic.length; i++) {
+    total += traffic[i];
+  };
+  var mean = total / traffic.length;
+  for (var i = 0; i < traffic.length; i++) {
+    if(traffic[i] > ((mean + Math.max.apply(Math, traffic)) / 2)) {
+      list.push('rgba(179,58,58,1)'); //Red
+    }
+    else if(traffic[i] < ((mean + Math.min.apply(Math, traffic)) / 2)) {
+      list.push('rgba(0, 230, 64,1)'); //Green
+    }
+    else {
+      list.push('rgba(243, 156, 18,1)'); //Orangey Yellow
+    }
+  }
+}
 
 
 </script>
