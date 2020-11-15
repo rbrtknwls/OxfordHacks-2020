@@ -152,8 +152,10 @@ socket.on('connect', () => {
 
         result.routes[0].sections.forEach((section) => {
           summary.push({
-            start: section.arrival,
-            end: section.departure,
+            start_place: section.arrival.place,
+            start_time: section.arrival.time,
+            end_place: section.departure.place,
+            end_time: section.departure.time,
             type: section.type
           })
           // Create a linestring to use as a point source for the route line
