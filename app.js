@@ -59,12 +59,12 @@ io.on('connection', function(socket){
     geocode = [];
   });
 
-  socket.on('storeloc', function(place_geocode){
-    locations.push(place_geocode);
+  socket.on('storeloc', function(place_loc){
+    locations = place_loc;
   });
 
   socket.on('storegeocode', function(place_geocode){
-    geocode.push(place_geocode);
+    geocode = place_geocode;
   });
 
   socket.on('getgeodata', function(sender){
