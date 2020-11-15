@@ -15,36 +15,97 @@
 </head>
 <script src="js/chart.js"></script>
 <script src="/socket.io/socket.io.js"></script>
+
+<link rel="stylesheet" type="text/css" href="css/dashboard.css">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+  rel="stylesheet">
+</head>
 <body>
 
-  <div class="card" style="width: 18rem;">
-    <div class="card-body">
-      <h5 class="card-title">Card title</h5>
-      <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-      <a href="#" class="card-link">Card link</a>
-      <a href="#" class="card-link">Another link</a>
+
+
+
+  <div class="app-content-box row">
+    <div class="col-4 destination-container">
+
+      <h2 class="app-title">Destinations</h2>
+
+      <div id="input-container">
+
+
+
+      </div>
+
+
+      <button class="dest-btn" id="add-dest">
+        <svg class="add-btn" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+          <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"
+          />
+        </svg>
+      </button>
+
+      <button  class="dest-btn"  id="sub-dest">
+        <svg class="add-btn" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-dash-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+          <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"/>
+        </svg>
+        </button>
+
+
+          <svg id="send-btn" class="enter-button " viewBox="0 0 16 16" class="bi bi-arrow-right-circle-fill" fill="url(#lg)" xmlns="http://www.w3.org/2000/svg">
+            <linearGradient id="lg">
+              <stop id="color1" offset="0" />
+              <stop id="color2" offset="1" />
+            </linearGradient>
+            <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-11.5.5a.5.5 0 0 1 0-1h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5z"
+            />
+          </svg>
+
+
     </div>
+
+    <div class="col-8 map-container">
+
+      <div class="row">
+        <button class="switch-btn btn-circle">1</button>
+        <button class="switch-btn btn-circle">2</button>
+        <button class="switch-btn btn-circle">3</button>
+
+      </div>
+
+      <div class="map-box">
+        <div class="info-box">
+          <div class="best-time">
+            <canvas id="time"></canvas>
+          </div>
+
+          <div class="time-chart">
+
+            <canvas id="traffic"></canvas>
+
+          </div>
+
+        </div>
+        <div class="map">
+
+          <div style="width: 100%; height: 100%" id="mapContainer"></div>
+
+        </div>
+      </div>
+    </div>
+
+
+
   </div>
 
-  <div class = "jumbotron">
-    <canvas id="traffic" width= "4000px" height= "1080px"></canvas>
-    <canvas id="time" width= "4000px" height= "1080px"></canvas>
-  </div>
+
+  <script src="js/grocerylist.js"></script>
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="js/main.js"></script>
 
-
-  <div class="centerdiv">
-    <div class="jumbotron">
-      <div style="width: 1080px; height: 810px" id="mapContainer"></div>
-    </div>
-  </div>
-
-  <head>
-    <header>Hello</header>
-  </header>
 
   <script>
 
