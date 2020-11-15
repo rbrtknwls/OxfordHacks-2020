@@ -70,8 +70,9 @@ socket.on('connect', () => {
       makerouts(geos);
       setTimeout(function(){
         console.log(summary);
-        socket.emit("storesummary", summary)
-      },200);
+        socket.emit("storesummary", [summary])
+      },2000);
+
     }, 3000);
 
   }
@@ -97,6 +98,7 @@ socket.on('connect', () => {
         }
       })
     }
+
 
 
 
@@ -154,6 +156,25 @@ socket.on('connect', () => {
       }
 
 
+    var onResult = function(result) {
+      // ensure that at least one route was found
+      if (result.routes.length) {
+
+        result.routes[0].sections.forEach((section) => {
+          summary[tab].push({
+            end_place: section.arrival.place,
+            end_time: section.arrival.time,
+            start_place: section.departure.place,
+            start_time: section.departure.time,
+            type: section.type
+          })
+          // Create a linestring to use as a point source for the route line
+          let linestring = H.geo.LineString.fromFlexiblePolyline(section.polyline);
+
+          // Create a polyline to display the route:
+          let routeLine = new H.map.Polyline(linestring, {
+            style: { strokeColor: col, lineWidth: 3 }
+          });
       function makeroute (loc1, loc2, col, tab){
 
         var stringloc1 = loc1.lat + ',' +  loc1.lng
