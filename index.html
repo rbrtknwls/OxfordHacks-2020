@@ -1,50 +1,101 @@
 <!DOCTYPE HTML>
 <html>
-   <head>
-        <title>Meetable</title>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
-        <link rel="stylesheet" type="text/css" href="css/style.css">
-    </head>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="js/main.js"></script>
-    <body>
-    <div class="centerdiv">
-        <div class="jumbotron">
-          <br>
-          <h4 style="text-align: center">SAMPLE TITLE</h4>
-          <h4 style="text-align: center">Here is just some random stuff for the front page</h4>
-          <hr>
-          <div class = "row " style="text-align: center;margin-top: 3vh">
-            <div class="col-xs-4 mx-auto">
-                <a class="btn btn-primary btn-lg" href="sign-in" role="button">Auth Test</a>
-            </div>
-            <div class="col-2">
 
-            </div>
-            <div class="col-xs-4 mx-auto">
-                 <a class="btn btn-side btn-lg" href = "dashboard" style = "text-decoration-color: white" href="#" role="button">Dashboard</a>
-            </div>
-          </div>
+<head>
+  <title>Meetable</title>
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="css/homepage.css">
+</head>
+<script src="/socket.io/socket.io.js"></script>
+<script src="js/main.js"></script>
+
+<body>
+
+  <div class="home-box">
+    <div class="block">
+      <div class="home-content-box">
+        <img class="logo" src="/resources/logo.png">
+        <h1 class="title">SafeWays</h1>
+        <div class="desc-box">
+          <p class="desc">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Ut enim ad minim veniam,
+          </p>
         </div>
+
+        <a href="dashboard">
+          <svg class="go-button" viewBox="0 0 16 16" class="bi bi-arrow-right-circle-fill" fill="url(#lg)" xmlns="http://www.w3.org/2000/svg">
+            <linearGradient id="lg">
+              <stop id="color1" offset="0" />
+              <stop id="color2" offset="1" />
+            </linearGradient>
+            <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-11.5.5a.5.5 0 0 1 0-1h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5z"
+            />
+          </svg>
+        </a>
+      </div>
     </div>
 
-    </body>
-    <script>
-      var socket = io.connect();
+    <div class="block">
+      <div class="graphic-box">
+        <div class="weirdgraphic">
+        </div>
 
-      var userid = getUserId()
-      socket.on('connect', () => {
-          socket.emit('getusers', socket.id);
+        <div>
+          <p class="desc-box">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </p>
+        </div>
 
-          socket.on('postusers', function(users){
-            var all_users = Object.values(users);
-            console.log(all_users);
-          });
+      </div>
 
-      });
+    </div>
 
-    </script>
+    <div class="block">
+
+      <div class="try-box">
+
+          <button class="try-button">
+            Try it Out!
+          </button>
+
+          <div>
+              <p class="desc-box">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              </p>
+            </div>
+            
+          <div>
+              
+  
+      </div>
+    
+  </div>
+
+
+</body>
+<script>
+  var socket = io.connect();
+
+  var userid = getUserId()
+  socket.on('connect', () => {
+    socket.emit('getusers', socket.id);
+
+    socket.on('postusers', function (users) {
+      var all_users = Object.values(users);
+      console.log(all_users);
+    });
+
+  });
+
+</script>
+
 
 </html>

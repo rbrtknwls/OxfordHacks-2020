@@ -1,0 +1,247 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>graphs</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js"
+  type="text/javascript" charset="utf-8"></script>
+  <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js"
+  type="text/javascript" charset="utf-8"></script>
+  <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"
+  type="text/javascript" charset="utf-8"></script>
+</head>
+<script src="js/chart.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+
+<link rel="stylesheet" type="text/css" href="css/dashboard.css">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+  rel="stylesheet">
+</head>
+<body>
+
+
+
+
+  <div class="app-content-box row">
+    <div class="col-4 destination-container">
+
+      <h2 class="app-title">Destinations</h2>
+
+      <div id="input-container">
+
+
+
+      </div>
+
+
+      <button class="dest-btn" id="add-dest">
+        <svg class="add-btn" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+          <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"
+          />
+        </svg>
+      </button>
+
+      <button  class="dest-btn"  id="sub-dest">
+        <svg class="add-btn" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-dash-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+          <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"/>
+        </svg>
+        </button>
+
+
+          <svg id="send-btn" class="enter-button " viewBox="0 0 16 16" class="bi bi-arrow-right-circle-fill" fill="url(#lg)" xmlns="http://www.w3.org/2000/svg">
+            <linearGradient id="lg">
+              <stop id="color1" offset="0" />
+              <stop id="color2" offset="1" />
+            </linearGradient>
+            <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-11.5.5a.5.5 0 0 1 0-1h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5z"
+            />
+          </svg>
+
+
+    </div>
+
+    <div class="col-8 map-container">
+
+      <div class="row">
+        <button class="switch-btn btn-circle">1</button>
+        <button class="switch-btn btn-circle">2</button>
+        <button class="switch-btn btn-circle">3</button>
+
+      </div>
+
+      <div class="map-box">
+        <div class="info-box">
+          <div class="best-time">
+            <canvas id="time"></canvas>
+          </div>
+
+          <div class="time-chart">
+
+            <canvas id="traffic"></canvas>
+
+          </div>
+
+        </div>
+        <div class="map">
+
+          <div style="width: 100%; height: 100%" id="mapContainer"></div>
+
+        </div>
+      </div>
+    </div>
+
+
+
+  </div>
+
+
+  <script src="js/grocerylist.js"></script>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="js/main.js"></script>
+
+
+  <script>
+
+//Line Graph
+
+  var socket = io.connect();
+  var traffic = [1,1,2,2,3,4,5,6,7,8,9,123,213,312,12,123,
+    152,632,193,139,110,238,520,1]
+  var list = [];
+  colours(traffic);
+
+  socket.on('connect', () => {
+    var ctx = document.getElementById('traffic').getContext('2d');
+    var linegraph = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['1 AM', '2 AM', '3 AM', '4 AM', '5 AM', '6 AM', '7 AM', '8 AM',
+        '9 AM', '10 AM', '11 AM', '12 PM', '1 PM', '2 PM', '3 PM', '4 PM',
+        '5 PM','6 PM','7 PM','8 PM','9 PM','10 PM','11 PM','12 AM'],
+        datasets: [{
+          label: 'Traffic Measure',
+          data: traffic,
+          backgroundColor: list,
+          borderColor: list,
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      }
+    });
+  });
+
+
+
+//Interactive Map
+  var socket = io.connect();
+  socket.on('connect', () => {
+    // provided that the platform and the map are instantiated.
+
+    var platform = new H.service.Platform({
+      'apikey': 'tDcN_f_fBqXmJjJn9zo1ljOc4DsXdB6grTAAE91t9Bo'
+    });
+    const service = platform.getXYZService({
+      token: 'AOJw_eE1TdWCkyF1ZXJHPAA'
+    });
+
+    // Obtain the default map types from the platform object:
+    var defaultLayers = platform.createDefaultLayers();
+
+    // create a provider for the public buildings data
+    const buildingsSpaceProvider = new H.service.xyz.Provider(service, 'PFOE8xNq', {
+      'min': 14
+    });
+    const buildingsSpaceLayer = new H.map.layer.TileLayer(buildingsSpaceProvider);
+    // add a layer to the map
+
+    var map = new H.Map(
+      document.getElementById('mapContainer'),
+      defaultLayers.vector.normal.map,
+      {
+        zoom: 8,
+        center: { lat: 43.6, lng: -79.3 }
+      });
+      map.addLayer(buildingsSpaceLayer);
+      // Enable the event system on the map instance:
+      var mapEvents = new H.mapevents.MapEvents(map);
+
+      // Add event listeners:
+      map.addEventListener('tap', function(evt) {
+        // Log 'tap' and 'mouse' events:
+        console.log(evt.type, evt.currentPointer.type);
+      });
+
+      // Instantiate the default behavior, providing the mapEvents object:
+      var behavior = new H.mapevents.Behavior(mapEvents);
+
+    });
+
+//Pie graphs
+    var times = [1312,12]
+    var ctx = document.getElementById('time').getContext('2d');
+    var piegraph = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Time Spent Walking','Time Spent in Transit'],
+        datasets: [{
+          label: 'Traffic Measure',
+          data: times,
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'
+          ],
+          borderWidth: 1
+        }]
+      }
+    });
+
+function colours(traffic){
+  var total = 0;
+  for (var i = 0; i < traffic.length; i++) {
+    total += traffic[i];
+  };
+  var mean = total / traffic.length;
+  for (var i = 0; i < traffic.length; i++) {
+    if(traffic[i] > ((mean + Math.max.apply(Math, traffic)) / 2)) {
+      list.push('rgba(179,58,58,1)'); //Red
+    }
+    else if(traffic[i] < ((mean + Math.min.apply(Math, traffic)) / 2)) {
+      list.push('rgba(0, 230, 64,1)'); //Green
+    }
+    else {
+      list.push('rgba(243, 156, 18,1)'); //Orangey Yellow
+    }
+  }
+}
+
+
+</script>
+
+</html>
