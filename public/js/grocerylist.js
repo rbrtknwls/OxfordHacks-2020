@@ -21,13 +21,12 @@ for (i = 0; i < 2; i++) {
 
 document.getElementById('add-dest').addEventListener('click', function () {
 
-  if (numDestinations <= 7) {
+  if (numDestinations <=8) {
     var div = document.createElement("DIV");
     var input = document.createElement("input");
 
     div.classList.add("add-input");
     input.classList.add("map-input");
-    div.id = "inputbox".concat(toString(numDestinations));
 
     div.appendChild(input);
 
@@ -36,10 +35,14 @@ document.getElementById('add-dest').addEventListener('click', function () {
 
     for (i = 0; i < dests.length; i++) {
       inputContainer.appendChild(dests[i]);
+
     }
+
+    console.log(inputContainer);
 
   }
 
+  
 
 });
 
@@ -50,8 +53,8 @@ document.getElementById('sub-dest').addEventListener('click', function () {
     numDestinations -= 1;
     var element = dests.pop()
 
-    document.getElementById(element.id).remove();
-    console.log(dests);
+    element.remove();
+    console.log(numDestinations );
   }
 
 });
