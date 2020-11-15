@@ -1,103 +1,131 @@
 <!DOCTYPE HTML>
 <html>
-   <head>
-        <title>Profile</title>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
-        <link rel="stylesheet" type="text/css" href="css/style.css">
-   </head>
-   <script src="js/main.js"></script>
+<head>
+  <title>graphs</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js"
+  type="text/javascript" charset="utf-8"></script>
+  <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js"
+  type="text/javascript" charset="utf-8"></script>
+  <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"
+  type="text/javascript" charset="utf-8"></script>
+</head>
+<script src="js/chart.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<body>
+
+  <div class = "jumbotron">
+    <canvas id="myChart" width= "4000px" height= "1080px"></canvas>
+  </div>
+
   <script src="/socket.io/socket.io.js"></script>
-   <body>
+  <script src="js/main.js"></script>
 
 
-     <div class="centerdiv">
-         <div class="jumbotron">
-           <div class="row">
-             <div class="col-md-8">
-                 <div class = "col">
-                     <h3 class="display-3" id = "disname"><strong>Random Name</strong></h3>
-                     <p class="display-4" id = "useranme">UnsetUsername</p>
-                 </div>
-
-             </div>
-             <div class="col-md-3">
-               <div class="card-body">
-                   <img src="https://i.picsum.photos/id/668/200/200.jpg?hmac=mVqr1fc4nHFre2QMZp5cuqUKLIRSafUtWt2vwlA9jG0" id = "pers" style = "top: 0px; object-fit: cover; border-radius: 50%; border: 1px solid" height = "200px" width = "200px"alt="...">
-               </div>
-             </div>
-           </div>
-           <hr style = "border: 20px solid">
-           <div class="d-flex">
-             <div class="p-3">
-               <h3> Class 1: </h3>
-             </div>
-             <div class="p-3">
-               <select  id = "class_1" class="form-control">
-                 <option>Math</option>
-                 <option>Science</option>
-               </select>
-             </div>
-              <div class="p-3">
-                <h3> Class 2: </h3>
-              </div>
-              <div class="p-3">
-                <select id = "class_2" class="form-control">
-                  <option>History</option>
-                  <option>French</option>
-                </select>
-              </div>
-              <div class="p-3">
-                <h3> Club 1: </h3>
-              </div>
-              <div class="p-3">
-                <select id = "club_1" class="form-control">
-                  <option>Fencing</option>
-                  <option>Cooking</option>
-                </select>
-              </div>
-           </div>
-           <div class="d-flex">
-             <div class="mr-auto p-3">
-              <button class="btn btn-side btn-lg" id = "submitButton" style = "text-decoration-color: white">Submit Changes</button>
-             </div>
-             <div class="p-3">
-               <a class="btn btn-side btn-lg" href = "dashboard" style = "text-decoration-color: white" role="button">Dashboard</a>
-             </div>
-           </div>
-         </div>
-       </div>
-
-   </body>
-   <script>
+  <div class="centerdiv">
+    <div class="jumbotron">
+      <div style="width: 1080px; height: 810px" id="mapContainer"></div>
+    </div>
+  </div>
 
 
-     var socket = io.connect();
-
-     var userid = getUserId();
-     socket.on('connect', () => {
-       if (cookieCheck()){
-         socket.emit('getInfo', userid, socket.id);
-
-         socket.on('postInfo', function(info){
-           console.log(info);
-           document.getElementById("disname").innerHTML = info.name;
-           document.getElementById("useranme").innerHTML = info.email;
-
-         });
-
-         document.getElementById('submitButton').onclick = function() {
-            socket.emit('updateInfo', checkFormState(), getUserId(), socket.id);
-         };
-
-       } else {
-         authFail();
-       }
-     });
+  <script>
 
 
+  var socket = io.connect();
 
-   </script>
+  socket.on('connect', () => {
+    var times = [1,1,2,2,3,4,5,6,7,8,9,123,213,1312,12]
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['1 AM', '2 AM', '3 AM', '4 AM', '5 AM', '6 AM', '7 AM', '8 AM',
+        '9 AM', '10 AM', '11 AM', '12 PM', '1 PM', '2 PM', '3 PM', '4 PM',
+        '5 PM','6 PM','7 PM','8 PM','9 PM','10 PM','11 PM','12 AM'],
+        datasets: [{
+          label: 'Traffic Measure',
+          data: times,
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      }
+    });
+  });
+
+  var socket = io.connect();
+  socket.on('connect', () => {
+    // provided that the platform and the map are instantiated.
+
+    var platform = new H.service.Platform({
+      'apikey': 'tDcN_f_fBqXmJjJn9zo1ljOc4DsXdB6grTAAE91t9Bo'
+    });
+    const service = platform.getXYZService({
+      token: 'AOJw_eE1TdWCkyF1ZXJHPAA'
+    });
+
+    // Obtain the default map types from the platform object:
+    var defaultLayers = platform.createDefaultLayers();
+
+    // create a provider for the public buildings data
+    const buildingsSpaceProvider = new H.service.xyz.Provider(service, 'PFOE8xNq', {
+      'min': 14
+    });
+    const buildingsSpaceLayer = new H.map.layer.TileLayer(buildingsSpaceProvider);
+    // add a layer to the map
+
+    var map = new H.Map(
+      document.getElementById('mapContainer'),
+      defaultLayers.vector.normal.map,
+      {
+        zoom: 8,
+        center: { lat: 43.6, lng: -79.3 }
+      });
+      map.addLayer(buildingsSpaceLayer);
+      // Enable the event system on the map instance:
+      var mapEvents = new H.mapevents.MapEvents(map);
+
+      // Add event listeners:
+      map.addEventListener('tap', function(evt) {
+        // Log 'tap' and 'mouse' events:
+        console.log(evt.type, evt.currentPointer.type);
+      });
+
+      // Instantiate the default behavior, providing the mapEvents object:
+      var behavior = new H.mapevents.Behavior(mapEvents);
+
+    });
+
+
+
+
+</script>
 
 </html>
