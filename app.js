@@ -5,6 +5,7 @@ var path = require('path');
 var fs = require('fs');
 var atob = require('atob')
 var im = require('imagemagick');
+var Chart = require('chart.js');
 
 // CONSTANTS AND API KEYS
 const PORT = process.env.PORT || 3000;
@@ -38,7 +39,7 @@ app.get('/chat', function (req, res) {
   res.sendFile(path.join(__dirname + '/pages/chat.html'));
 });
 app.get('/dashboard', function (req, res) {
-  res.sendFile(path.join(__dirname + '/pages/dash.html'));
+  res.sendFile(path.join(__dirname + '/pages/routes.html'));
 });
 
 
