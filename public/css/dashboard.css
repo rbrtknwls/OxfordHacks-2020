@@ -46,6 +46,7 @@ html{
 }
 
 .app-content-box{
+    
     height:100vh;
 }
 
@@ -81,24 +82,20 @@ html{
 
 .map-box{
     
-    background-color:red;
     width:90%;
     height:80%;
     border-style:solid;
-    border-color:grey;
     border-radius:2em;
     border-width:1px;
 }
 .info-box{
     height:40%;
     width:100%;
-    background-color:blue;
     border-radius:2em 2em 0 0;
 }
 .map{
     height:60%;
     width:100%;
-    background-color:green;
     border-radius: 0 0 2em 2em;
 }
 
@@ -136,4 +133,12 @@ html{
 .dest-btn{
     border:none;
     background-color:white;
+}
+
+#other{
+    display:none;
+}
+
+#other2{
+    display:none;
 }

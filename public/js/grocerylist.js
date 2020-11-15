@@ -68,6 +68,11 @@ document.getElementById('send-btn').addEventListener('click', function () {
     destinations.push(dests[i].childNodes[0].value)
   }
 
+  document.getElementById('other').style.display="block";
+  document.getElementById('other2').style.display="block";
+  document.getElementById('mapContainer').style.height="100%";
+  document.getElementById('mapContainer').style.width="100%";
+
   console.log(destinations);
 
 });

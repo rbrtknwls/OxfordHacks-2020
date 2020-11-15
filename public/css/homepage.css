@@ -102,6 +102,8 @@ font-family: Raleway;
       margin:1em;
       border-radius:15px;
       font-family:Raleway;
+      color:white;
+      outline:none!important;
 
     background: rgb(81,177,116);
     background: linear-gradient(45deg, rgba(81,177,116,1) 0%, rgba(143,189,49,1) 100%);
