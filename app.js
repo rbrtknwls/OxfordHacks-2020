@@ -41,7 +41,7 @@ app.get('/chat', function (req, res) {
   res.sendFile(path.join(__dirname + '/pages/chat.html'));
 });
 app.get('/dashboard', function (req, res) {
-  res.sendFile(path.join(__dirname + '/pages/routes.html'));
+  res.sendFile(path.join(__dirname + '/pages/main.html'));
 });
 
 
@@ -82,6 +82,13 @@ io.on('connection', function(socket){
     console.log(geocode[indx + 1]);
 
     io.to(sender).emit('postloc', geocode[indx], geocode[indx + 1]);
+  });
+
+  socket.on('getallloc', function(sender){
+    console.log("--Location Request--");
+    console.log(geocode);
+
+    io.to(sender).emit('postallloc', geocode);
   });
 
   socket.on('getgeodata', function(sender){
