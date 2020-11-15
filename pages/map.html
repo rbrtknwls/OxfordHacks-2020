@@ -27,6 +27,18 @@
 
 
 <script>
+
+function re_order(loc,geos,name){
+    dict = {}
+    for (var i = 0; i < name; i++){
+      for (var x = 0; x < name; x++){
+        1+1
+
+      }
+    }
+}
+
+
 var socket = io.connect();
 socket.on('connect', () => {
   //API INITIAL
@@ -49,6 +61,7 @@ socket.on('connect', () => {
 
   storeGeoData(useres);
 
+  setTimeout(function(){ getGeoData()}, 2000);
 
 
   function getGeoData(){
@@ -67,7 +80,7 @@ socket.on('connect', () => {
       makerouts(geos);
       setTimeout(function(){
         console.log(summary);
-        socket.emit("storesummary", socket.id)
+        socket.emit("storesummary", summary)
       },200);
     }, 3000);
 
@@ -75,41 +88,24 @@ socket.on('connect', () => {
 
 
   function storeGeoData(lop){
+    socket.emit('clearloccash');
 
-    var given = -1
+    let promises = [];
 
     for (var i = 0; i < lop.length; i++){
-
-      locs.push(lop[i])
-      serv.geocode({
-        q: locs[i],
-      }, (result) => {
-        // Add a marker for each location found
-        result.items.forEach((item) => {
-          setTimeout(function(){
-            given++;
-            geos[given] = item.position;
-          }, 500);
-        });
-
-      }, alert);
+      promises.push(
+        serv.geocode({
+        q: lop[i],
+      }));
     }
 
-    setTimeout(function(){
-      socket.emit('storeloc', locs);
-      socket.emit('storegeocode', geos);
-
-      setTimeout(function(){
-        getGeoData();
-      }, 2000);
-    }, 2000);
-
-
-  }
-
-  function storepoint(point){
-    socket.emit('storeloc', point);
-
+    Promise.all(promises)
+    .then((results) => {
+       for (var i = 0; i < lop.length; i++){
+         socket.emit('storeloc', lop[i]);
+         socket.emit('storegeocode', results[i].items[0].position);
+       }
+    })
   }
 
 
@@ -136,7 +132,7 @@ socket.on('connect', () => {
     console.log(stringloc1)
 
     var routingParameters = {
-      'time': "2020-04-28T19:06:00+02:00",
+      'departureTime': "2020-11-13T19:06:00",
       // The start point of the route:
       'origin': stringloc1,
       // The end point of the route:
@@ -180,6 +176,8 @@ socket.on('connect', () => {
       }
     };
 
+    function
+
 
     // Get an instance of the routing service version 8:
     var publicTransitService = platform.getPublicTransitService();
@@ -209,6 +207,19 @@ socket.on('connect', () => {
     }
 
 
+    var serva = platform.getPlatformDataService();
+
+    style = new H.map.SpatialStyle();
+    // create tile provider and layer that displays postcode boundaries
+    var boundariesProvider = new H.service.extension.platformData.TileProvider(serva,
+    {
+      layer: 'PSTLCB_GEN', level: 12
+    }, {
+      resultType: H.service.extension.platformData.TileProvider.ResultType.POLYLINE,
+      styleCallback: function(data) {return style}
+    });
+    var boundaries = new H.map.layer.TileLayer(boundariesProvider);
+
 
     var map = new H.Map(
       document.getElementById('mapContainer'),
@@ -227,11 +238,13 @@ socket.on('connect', () => {
         // Log 'tap' and 'mouse' events:
         console.log(evt.type, evt.currentPointer.type);
       });
+          map.addLayer(boundaries);
 
       // Instantiate the default behavior, providing the mapEvents object:
       var behavior = new H.mapevents.Behavior(mapEvents);
       // Define a callback function to process the routing response:
       setStyle(map);
+
 
 
 
