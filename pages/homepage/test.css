@@ -1,0 +1,49 @@
+.title{
+    font-family: Raleway;
+}
+
+.desc{
+    font-family: Raleway;
+}
+
+.go-button{
+    width: 4em;
+    height:4em;
+    transition:0.5s;
+
+}
+
+.go-button:hover{
+    transform: scale(1.03);
+    transition:0.5s;
+
+}
+
+
+.desc-box{
+align-self: center;
+width: 50%;
+margin:auto;
+}
+
+@media only screen and (max-width: 800px) {
+    .desc-box{
+        align-self: center;
+        width: 80%;
+        margin:auto;
+        }
+}
+
+.home-content-box{
+    text-align: center;
+    margin-top:20vh;
+    
+
+}
+
+#color1 {
+    stop-color: #8FBD31
+  }
+  #color2 {
+    stop-color: #51B174
+  }
