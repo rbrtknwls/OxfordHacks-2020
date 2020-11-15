@@ -109,3 +109,11 @@ font-family: Raleway;
     background: linear-gradient(45deg, rgba(81,177,116,1) 0%, rgba(143,189,49,1) 100%);
       
   }
+
+#particles-js{
+    position: fixed;
+
+    width:100vw;
+    top: 0;
+    right: 0;
+}
