@@ -105,6 +105,7 @@
 
 
   <script src="js/grocerylist.js"></script>
+  
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="js/main.js"></script>
@@ -149,50 +150,6 @@
   });
 
 
-
-//Interactive Map
-  var socket = io.connect();
-  socket.on('connect', () => {
-    // provided that the platform and the map are instantiated.
-
-    var platform = new H.service.Platform({
-      'apikey': 'tDcN_f_fBqXmJjJn9zo1ljOc4DsXdB6grTAAE91t9Bo'
-    });
-    const service = platform.getXYZService({
-      token: 'AOJw_eE1TdWCkyF1ZXJHPAA'
-    });
-
-    // Obtain the default map types from the platform object:
-    var defaultLayers = platform.createDefaultLayers();
-
-    // create a provider for the public buildings data
-    const buildingsSpaceProvider = new H.service.xyz.Provider(service, 'PFOE8xNq', {
-      'min': 14
-    });
-    const buildingsSpaceLayer = new H.map.layer.TileLayer(buildingsSpaceProvider);
-    // add a layer to the map
-
-    var map = new H.Map(
-      document.getElementById('mapContainer'),
-      defaultLayers.vector.normal.map,
-      {
-        zoom: 8,
-        center: { lat: 43.6, lng: -79.3 }
-      });
-      map.addLayer(buildingsSpaceLayer);
-      // Enable the event system on the map instance:
-      var mapEvents = new H.mapevents.MapEvents(map);
-
-      // Add event listeners:
-      map.addEventListener('tap', function(evt) {
-        // Log 'tap' and 'mouse' events:
-        console.log(evt.type, evt.currentPointer.type);
-      });
-
-      // Instantiate the default behavior, providing the mapEvents object:
-      var behavior = new H.mapevents.Behavior(mapEvents);
-
-    });
 
 //Pie graphs
     var times = [1312,12]

@@ -1,33 +1,3 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-  <title>Sign in</title>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-  <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
-  <link rel="stylesheet" type="text/css" href="css/style.css">
-  <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js"
-  type="text/javascript" charset="utf-8"></script>
-  <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js"
-  type="text/javascript" charset="utf-8"></script>
-  <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js"
-  type="text/javascript" charset="utf-8"></script>
-</head>
-
-<!-- Refs -->
-<script src="/socket.io/socket.io.js"></script>
-<script src="js/main.js"></script>
-
-
-<div class="centerdiv">
-  <div class="jumbotron">
-    <div style="width: 1080px; height: 810px" id="mapContainer"></div>
-  </div>
-</div>
-
-
-<script>
-
 function re_order(loc,geos,name){
     dict = {}
     for (var i = 0; i < name; i++){
@@ -255,10 +225,3 @@ socket.on('connect', () => {
 
 
 
-
-
-
-
-
-    </script>
-    </html>
