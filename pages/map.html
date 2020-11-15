@@ -70,9 +70,14 @@ socket.on('connect', () => {
       makerouts(geos);
       setTimeout(function(){
         console.log(summary);
+<<<<<<< tabfunc
+        socket.emit("storesummary", summary)
+      },2000);
+=======
         socket.emit("storesummary", [summary])
       },2000);
 
+>>>>>>> master
     }, 3000);
 
   }
@@ -161,11 +166,19 @@ socket.on('connect', () => {
       if (result.routes.length) {
 
         result.routes[0].sections.forEach((section) => {
+<<<<<<< tabfunc
+          summary.push({
+            start_place: section.arrival.place,
+            start_time: section.arrival.time,
+            end_place: section.departure.place,
+            end_time: section.departure.time,
+
           summary[tab].push({
             end_place: section.arrival.place,
             end_time: section.arrival.time,
             start_place: section.departure.place,
             start_time: section.departure.time,
+>>>>>>> 
             type: section.type
           })
           // Create a linestring to use as a point source for the route line

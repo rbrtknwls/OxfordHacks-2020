@@ -15,105 +15,272 @@
 </head>
 <script src="js/chart.js"></script>
 <script src="/socket.io/socket.io.js"></script>
-
-<link rel="stylesheet" type="text/css" href="css/dashboard.css">
-<link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-  rel="stylesheet">
-</head>
 <body>
 
-
-
-
-  <div class="app-content-box row">
-    <div class="col-4 destination-container">
-
-      <h2 class="app-title">Destinations</h2>
-
-      <div id="input-container">
-
-
-
-      </div>
-
-
-      <button class="dest-btn" id="add-dest">
-        <svg class="add-btn" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-          <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"
-          />
-        </svg>
-      </button>
-
-      <button  class="dest-btn"  id="sub-dest">
-        <svg class="add-btn" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-dash-circle" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-          <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8z"/>
-        </svg>
-        </button>
-
-
-          <svg id="send-btn" class="enter-button " viewBox="0 0 16 16" class="bi bi-arrow-right-circle-fill" fill="url(#lg)" xmlns="http://www.w3.org/2000/svg">
-            <linearGradient id="lg">
-              <stop id="color1" offset="0" />
-              <stop id="color2" offset="1" />
-            </linearGradient>
-            <path fill-rule="evenodd" d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-11.5.5a.5.5 0 0 1 0-1h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5z"
-            />
-          </svg>
-
-
+  <div class="card" style="width: 18rem;">
+    <div class="card-body">
+      <h5 class="card-title">Card title</h5>
+      <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+      <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+      <a href="#" class="card-link">Card link</a>
+      <a href="#" class="card-link">Another link</a>
     </div>
-
-    <div id="mapBox" class="col-8 map-container">
-
-        <div id="other2">
-      <div class="row">
-        <button class="switch-btn btn-circle">1</button>
-        <button class="switch-btn btn-circle">2</button>
-        <button class="switch-btn btn-circle">3</button>
-</div>
-      </div>
-
-      <div class="map-box">
-        <div id="other">
-        <div class="info-box">
-          <div class="best-time">
-            <canvas id="time"></canvas>
-          </div>
-
-          <div class="time-chart">
-
-            <canvas id="traffic"></canvas>
-
-          </div>
-
-        </div>
-      </div>
-        <div class="map">
-
-          <div style="width:60vw; height: 80vh; display:block !important;" id="mapContainer"></div>
-
-        </div>
-      </div>
-    </div>
-
-
-
   </div>
 
-
-  <script src="js/grocerylist.js"></script>
-  
+  <div class = "jumbotron">
+    <canvas id="traffic" width= "4000px" height= "1080px"></canvas>
+    <canvas id="time" width= "4000px" height= "1080px"></canvas>
+  </div>
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="js/main.js"></script>
 
 
+  <div class="centerdiv">
+    <div class="jumbotron">
+      <div style="width: 1080px; height: 810px" id="mapContainer"></div>
+    </div>
+  </div>
+
+  <head>
+    <header>Hello</header>
+  </header>
+
   <script>
 
-//Line Graph
+  //Line Graph
+
+  var socket = io.connect();
+  var traffic = []
+    var list = [];
+    colours(traffic);
+    var totalWalk = 0.0;
+    var totalTransit = 0.0;
+    var platform = new H.service.Platform({
+      'apikey': 'tDcN_f_fBqXmJjJn9zo1ljOc4DsXdB6grTAAE91t9Bo'
+    });
+    const service = platform.getXYZService({
+      token: 'AOJw_eE1TdWCkyF1ZXJHPAA'
+    });
+
+    // Obtain the default map types from the platform object:
+    var defaultLayers = platform.createDefaultLayers();
+    var publicTransitService = platform.getPublicTransitService();
+    const TABNUM = 0
+    socket.on('connect', () => {
+      // --------------------------- //
+
+
+      socket.emit('getloc', TABNUM, socket.id);
+
+
+      socket.on('postloc', function(loc1, loc2){
+        console.log(loc1)
+        console.log(loc2)
+        get_summary(loc1,loc2);
+        get_hist(loc1, loc2);
+
+      });
+    });
+
+    function get_summary (loc1, loc2){
+
+      var stringloc1 = loc1.lat + ',' +  loc1.lng
+      var stringloc2 = loc2.lat + ',' +  loc2.lng
+
+      var routingParameters = {
+        // The start point of the route:
+        'origin': stringloc1,
+        // The end point of the route:
+        'destination': stringloc2,
+        // Include the route shape in the response
+        'return': 'polyline'
+      };
+
+      var defaultLayers = platform.createDefaultLayers();
+
+
+      var onResult = function(result) {
+        summary = [];
+        if (result.routes.length) {
+          result.routes[0].sections.forEach((section) => {
+            summary.push({
+              start_place: section.arrival.place,
+              start_time: section.arrival.time,
+              end_place: section.departure.place,
+              end_time: section.departure.time,
+              type: section.type
+            })
+          });
+        }
+        console.log(summary);
+        time(summary);
+      };
+      publicTransitService.getRoutes(routingParameters, onResult,
+        function(error) {
+          alert(error.message);
+        });
+
+    }
+
+    function graphs(traffic) {
+
+      var ctx = document.getElementById('traffic').getContext('2d');
+      var linegraph = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['1 AM', '2 AM', '3 AM', '4 AM', '5 AM', '6 AM', '7 AM', '8 AM',
+          '9 AM', '10 AM', '11 AM', '12 PM', '1 PM', '2 PM', '3 PM', '4 PM',
+          '5 PM','6 PM','7 PM','8 PM','9 PM','10 PM','11 PM'],
+          datasets: [{
+            label: 'Traffic Measure',
+            data: traffic,
+            backgroundColor: list,
+            borderColor: list,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
+            }]
+          }
+        }
+      });
+
+
+
+
+      var map = new H.Map(
+        document.getElementById('mapContainer'),
+        defaultLayers.vector.normal.map,
+        {
+          zoom: 8,
+          center: { lat: 43.6, lng: -79.3 }
+        });
+
+        // Enable the event system on the map instance:
+        var mapEvents = new H.mapevents.MapEvents(map);
+
+        // Add event listeners:
+        map.addEventListener('tap', function(evt) {
+          // Log 'tap' and 'mouse' events:
+          console.log(evt.type, evt.currentPointer.type);
+        });
+
+        // Instantiate the default behavior, providing the mapEvents object:
+        var behavior = new H.mapevents.Behavior(mapEvents);
+
+        // --------------------------- //
+        var times = [1312,12]
+        var ctx = document.getElementById('time').getContext('2d');
+        var piegraph = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: ['Time Spent Walking','Time Spent in Transit'],
+            datasets: [{
+              label: 'People Measure',
+              data: [totalWalk.toFixed(2), totalTransit.toFixed(2)],
+              backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+              ],
+              borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+              ],
+              borderWidth: 1
+            }]
+          }
+        });
+      }
+
+      function time(route) {
+        for (var i = 0; i < route.length; i++) {
+          var end_string = route[i].end_time;
+          var start_string = route[i].start_time;
+
+          while(end_string.charAt(0) != 'T' && start_string.charAt(0) != 'T') {
+            if(end_string.charAt(0) != 'T' && start_string.charAt(0) != 'T') {
+              end_string = end_string.substring(1);
+              start_string = start_string.substring(1);
+            }
+            else if(end_string.charAt(0) != 'T') {
+              end_string = end_string.substring(1);
+            }
+            else if (start_string.charAt(0) != 'T'){
+              start_string.substring(1);
+            }
+          }
+
+          end_string = parseFloat(end_string.substring(1,3))
+          + (parseFloat(end_string.substring(4,6)) / 60.0);
+          start_string = parseFloat(start_string.substring(1,3))
+          + (parseFloat(start_string.substring(4,6)) / 60.0);
+
+          if(route[i].type == "pedestrian") {
+            totalWalk +=  Math.abs(end_string - start_string);
+          }
+          else if (route[i].type == "transit"){
+            totalTransit += Math.abs(end_string - start_string);
+          }
+        }
+      }
+
+
+      function colours(traffic){
+        var total = 0;
+        for (var i = 0; i < traffic.length; i++) {
+          total += traffic[i];
+        };
+        var mean = total / traffic.length;
+        for (var i = 0; i < traffic.length; i++) {
+          if(traffic[i] > ((mean + Math.max.apply(Math, traffic)) / 2)) {
+            list.push('rgba(235, 57, 45, 1)'); //Red
+          }
+          else if(traffic[i] < ((mean + Math.min.apply(Math, traffic)) / 2)) {
+            list.push('rgba(176, 221, 73, 1)'); //Green
+          }
+          else {
+            list.push('rgba(254, 197, 52, 1)'); //Orangey Yellow
+          }
+        }
+      }
+
+      function totalTime(route) {
+        var total = 0;
+        for (var i = 0; i < route.length; i++) {
+          if (i == 0){
+              var start_string = (route[i].departure.time).substring(8);
+          }
+          if (i == route.length-1){
+               var end_string = (route[i].arrival.time).substring(8);
+               //console.log("-----")
+              // console.log(start_string);
+               //console.log(end_string);
+               if (end_string.substring(0,2) > end_string.substring(0,2)){
+                 end_string = 24 + parseFloat(end_string.substring(1,3))
+                 + (parseFloat(end_string.substring(4,6)) / 60.0);
+                 start_string = parseFloat(start_string.substring(1,3))
+                 + (parseFloat(start_string.substring(4,6)) / 60.0);
+               }else{
+                 end_string = parseFloat(end_string.substring(1,3))
+                 + (parseFloat(end_string.substring(4,6)) / 60.0);
+                 start_string = parseFloat(start_string.substring(1,3))
+                 + (parseFloat(start_string.substring(4,6)) / 60.0);
+               }
+
+               total += Math.abs(end_string - start_string);
+               //console.log(total);
+
+          }
+
+        }
+        return total;
+      }
 
   var socket = io.connect();
   var traffic = [1,1,2,2,3,4,5,6,7,8,9,123,213,312,12,123,
@@ -287,24 +454,75 @@ function time(route) {
 }
 
 
-function colours(traffic){
-  var total = 0;
-  for (var i = 0; i < traffic.length; i++) {
-    total += traffic[i];
-  };
-  var mean = total / traffic.length;
-  for (var i = 0; i < traffic.length; i++) {
-    if(traffic[i] > ((mean + Math.max.apply(Math, traffic)) / 2)) {
-      list.push('rgba(179,58,58,1)'); //Red
-    }
-    else if(traffic[i] < ((mean + Math.min.apply(Math, traffic)) / 2)) {
-      list.push('rgba(0, 230, 64,1)'); //Green
-    }
-    else {
-      list.push('rgba(243, 156, 18,1)'); //Orangey Yellow
-    }
-  }
-}
+
+      function get_hist(loc1, loc2){
+
+        let promises = [];
+
+        var stringloc1 = loc1.lat + ',' +  loc1.lng
+        var stringloc2 = loc2.lat + ',' +  loc2.lng
+
+        for (var i = 1; i < 24; i++){
+
+          if (i < 10){
+            var time = ("2020-11-14T0"+i+":00:00")
+          }else{
+            var time = ("2020-11-14T"+i+":00:00")
+          }
+
+          promises.push(
+            publicTransitService.getRoutes({
+              'departureTime': time,
+              // The start point of the route:
+              'origin': stringloc1,
+              // The end point of the route:
+              'destination': stringloc2,
+              // Include the route shape in the response
+              'return': 'polyline'
+            }));
+          }
+
+          Promise.all(promises).then((results) => {
+            var data = []
+            for (var i = 0; i < results.length; i++){
+              console.log(results[i].routes[0].sections)
+
+              var start = results[i].routes[0].sections[0].departure.time.substring(8)
+              var end = (results[i].routes[0].sections.slice(-1)[0]).arrival.time.substring(8)
+
+
+
+              console.log(end.substring(6,8))
+              if (end.substring(0,2) > start.substring(0,2)){
+                end = 24 + parseFloat(end.substring(3,5))
+                + (parseFloat(end.substring(6,8)) / 60.0);
+                start = parseFloat(start.substring(3,5))
+                + (parseFloat(start.substring(6,8)) / 60.0);
+              }else{
+                end = parseFloat(end.substring(3,5))
+                + (parseFloat(end.substring(6,8)) / 60.0);
+                start = parseFloat(start.substring(3,5))
+                + (parseFloat(start.substring(6,8)) / 60.0);
+              }
+
+              if ((i > 13) && (i < 19)){
+                end += Math.abs(3 - Math.abs(16-i))
+              }
+
+              if ((i > 6) && (i < 9)){
+                end += Math.abs(1.5 - Math.abs(7-i))
+              }
+
+              data.push(end-start);
+            }
+            colours(data);
+            setTimeout(function(){
+              graphs(data);
+            }, 1000);
+          })
+
+
+        }
 
 function totalTime(route) {
   var total = 0;
@@ -336,6 +554,6 @@ function totalTime(route) {
 }
 
 
-</script>
+      </script>
 
-</html>
+      </html>
