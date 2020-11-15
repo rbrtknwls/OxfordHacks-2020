@@ -72,7 +72,7 @@ io.on('connection', function(socket){
     console.log("--GeoData Request--");
     console.log(locations);
     console.log(geocode);
-    io.to(sender).emit('postgeodata', locations, geocode]);
+    io.to(sender).emit('postgeodata', [locations, geocode]);
   });
 
 });
