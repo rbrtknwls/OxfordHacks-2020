@@ -53,7 +53,7 @@ socket.on('connect', () => {
   });
 
   function getloc(Tabnum){
-    socket.emit('getloc', Tabnum, socket.id);
+    socket.emit('getloc', parseInt(Tabnum), parseInt(Tabnum)+1, socket.id);
   }
 
   function getallloc(){
@@ -337,8 +337,11 @@ socket.on('connect', () => {
 
       but.id = i;
 
-      but.addEventListener('click', () => {
-        getloc(i-1)});
+      but.addEventListener('click', function(event){
+        console.log(event.path[0].id);
+          getloc(event.path[0].id);
+
+      })
 
       list.appendChild(but);
     }
@@ -347,7 +350,6 @@ socket.on('connect', () => {
 
 
   function eval(destinations){
-     console.log(destinations);
      if (destinations.length == 1){
        window.alert("Entermore locations!");
      }
@@ -465,7 +467,6 @@ socket.on('connect', () => {
 
   }
   function get_summary_wrap (lop){
-    console.log(lop)
     let promises = [];
 
     for (var i = 0; i < lop.length-1; i++){
@@ -476,10 +477,6 @@ socket.on('connect', () => {
 
       Promise.all(promises)
       .then((results) => {
-
-        console.log(results);
-        console.log(totalWalk);
-        console.log(totalTransit);
 
         setTimeout(function(){
 
@@ -614,7 +611,6 @@ socket.on('connect', () => {
     }
 
     function get_hist_wrap (lop){
-      console.log(lop)
       let promises = [];
 
       for (var i = 0; i < lop.length-1; i++){
@@ -626,7 +622,6 @@ socket.on('connect', () => {
         Promise.all(promises)
         .then((results) => {
 
-          console.log(data);
 
           setTimeout(function(){
            coloursa(data);
@@ -685,8 +680,7 @@ socket.on('connect', () => {
               + (parseFloat(start.substring(6,8)) / 60.0);
             }
 
-            console.log(data)
-            console.log(end-start)
+
             data[i] += end-start +0.01;
           }
         })
@@ -751,7 +745,6 @@ socket.on('connect', () => {
     });
 
   function line(traffic){
-    console.log(traffic);
     linegraph.data.datasets[0].data = traffic;
     linegraph.data.datasets[0].backgroundColor = lista;
     linegraph.data.datasets[0].borderColor = lista;
@@ -779,8 +772,6 @@ socket.on('connect', () => {
     }
   });
   function circle(){
-    console.log(totalWalk);
-    console.log(totalTransit);
     piegraph.data.datasets[0].data = [totalWalk.toFixed(2), totalTransit.toFixed(2)];
     piegraph.update();
 

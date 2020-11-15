@@ -76,10 +76,13 @@ io.on('connection', function(socket){
 
   });
 
-  socket.on('getloc', function(indx, sender){
+  socket.on('getloc', function(indx,indx_1, sender){
     console.log("--Location Request--");
+    console.log(indx);
+    console.log(indx_1);
+    console.log(geocode);
     console.log(geocode[indx]);
-    console.log(geocode[indx + 1]);
+    console.log(geocode[indx_1]);
 
     io.to(sender).emit('postloc', geocode[indx], geocode[indx + 1]);
   });
