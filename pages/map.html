@@ -29,17 +29,126 @@
 <script>
 var socket = io.connect();
 socket.on('connect', () => {
-  // provided that the platform and the map are instantiated.
-
+  //API INITIAL
   var platform = new H.service.Platform({
-    'apikey': 'tDcN_f_fBqXmJjJn9zo1ljOc4DsXdB6grTAAE91t9Bo'
+    'apikey': 'IbG53sHTYaARLs7f0i9qHEchQPMwQd8QoKUzYSlxC8M'
   });
   const service = platform.getXYZService({
     token: 'AOJw_eE1TdWCkyF1ZXJHPAA'
   });
+  var serv = platform.getSearchService();
 
-  // Obtain the default map types from the platform object:
+  useres = []
+  useres[0] = '5150 Upper Middle Rd, Burlington, ON';
+  useres[1] = '161 University Ave W, Waterloo, ON';
+
+
+  storeGeoData(useres);
+
+
+  function getGeoData(){
+    socket.emit("getgeodata", socket.id)
+
+    socket.on("postgeodata", function(loc,geo){
+      locs = loc
+      geos = geo
+      for (var i = 0; i < loc.length; i++){
+        console.log(loc[i]);
+        console.log(geo[i]);
+        map.addObject(new H.map.Marker(geo[i]))
+      }
+    });
+
+    setTimeout(function(){
+      makeroute(geos[0], geos[1]);
+    }, 3000);
+
+  }
+
+  function storeGeoData(lop){
+
+    socket.emit('clearloccash');
+
+    for (var i = 0; i < useres.length; i++){
+      socket.emit('storeloc', lop[i]);
+      serv.geocode({
+        q: useres[i],
+      }, (result) => {
+        // Add a marker for each location found
+        result.items.forEach((item) => {
+          socket.emit('storegeocode', item.position);
+        });
+
+      }, alert);
+    }
+    setTimeout(function(){ getGeoData(); }, 3000);
+
+  }
+
+  var targetElement = document.getElementById('mapContainer');
   var defaultLayers = platform.createDefaultLayers();
+
+  function makeroute (loc1, loc2){
+    console.log(loc1)
+    console.log(loc2)
+
+    var stringloc1 = loc1.lat + ',' +  loc1.lng
+    var stringloc2 = loc2.lat + ',' +  loc2.lng
+
+    console.log(stringloc1)
+
+    var routingParameters = {
+  // The start point of the route:
+  'origin': stringloc1,
+  // The end point of the route:
+  'destination': stringloc2,
+  // Include the route shape in the response
+  'return': 'polyline'
+};
+
+    var onResult = function(result) {
+      // ensure that at least one route was found
+      if (result.routes.length) {
+        result.routes[0].sections.forEach((section) => {
+          // Create a linestring to use as a point source for the route line
+          let linestring = H.geo.LineString.fromFlexiblePolyline(section.polyline);
+
+          // Create a polyline to display the route:
+          let routeLine = new H.map.Polyline(linestring, {
+            style: { strokeColor: 'blue', lineWidth: 3 }
+          });
+
+          // Create a marker for the start point:
+          let startMarker = new H.map.Marker(section.departure.place.location);
+
+          // Create a marker for the end point:
+          let endMarker = new H.map.Marker(section.arrival.place.location);
+
+          // Add the route polyline and the two markers to the map:
+          map.addObjects([routeLine, startMarker, endMarker]);
+
+        });
+      }
+    };
+
+    // Get an instance of the routing service version 8:
+    var publicTransitService = platform.getPublicTransitService();
+
+    // Call calculateRoute() with the routing parameters,
+    // the callback and an error callback function (called if a
+    // communication error occurs):
+    publicTransitService.getRoutes(routingParameters, onResult,
+      function(error) {
+        alert(error.message);
+      });
+    }
+
+
+
+
+
+
+
 
   // create a provider for the public buildings data
   const buildingsSpaceProvider = new H.service.xyz.Provider(service, 'PFOE8xNq', {
@@ -48,6 +157,7 @@ socket.on('connect', () => {
   const buildingsSpaceLayer = new H.map.layer.TileLayer(buildingsSpaceProvider);
   // add a layer to the map
 
+
   var map = new H.Map(
     document.getElementById('mapContainer'),
     defaultLayers.vector.normal.map,
@@ -55,7 +165,8 @@ socket.on('connect', () => {
       zoom: 8,
       center: { lat: 43.6, lng: -79.3 }
     });
-    map.addLayer(buildingsSpaceLayer);
+
+    //map.addLayer(buildingsSpaceLayer);
     // Enable the event system on the map instance:
     var mapEvents = new H.mapevents.MapEvents(map);
 
@@ -67,8 +178,18 @@ socket.on('connect', () => {
 
     // Instantiate the default behavior, providing the mapEvents object:
     var behavior = new H.mapevents.Behavior(mapEvents);
+    // Define a callback function to process the routing response:
 
-  });
+
+
+
+    });
+
+
+
+
+
+
 
 
 
