@@ -1,0 +1,144 @@
+html{
+    overflow-x:hide;
+}
+#color1 {
+    stop-color: #8FBD31
+  }
+  #color2 {
+    stop-color: #51B174
+  }
+
+
+  .enter-button{
+    width: 3em;
+    height:3em;
+    transition:0.5s;
+    margin-left:1em;
+    position: absolute;
+    bottom:3em;
+    right:3em;
+
+}
+
+.enter-button:hover{
+    transform: scale(1.03);
+    transition:0.5s;
+
+}
+
+
+.add-input{
+   
+    margin: 1em;
+}
+
+.map-input{
+    padding:0.3em;
+    border-radius:50px;
+    border-width:1px;
+    width:80%;
+}
+
+.add-btn{
+    margin-left:1em;
+    height:2em;
+    width:2em;
+}
+
+.app-content-box{
+    
+    height:100vh;
+}
+
+.app-title{
+    margin-left:0.5em;
+    font-family: Raleway;
+}
+
+.switch-btn{
+    
+    padding:1em;
+}
+
+.btn-circle{
+    width: 3em;
+    height: 3em;
+    padding: 6px 0px;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1.42857;
+    margin:1em;
+    outline:none !important;
+    background-color:white;
+    border-style:solid;
+    border-color:grey;
+    font-family:Raleway;
+}
+
+.btn-circle:active{
+    background-color:grey;
+}
+
+.map-box{
+    
+    width:90%;
+    height:80%;
+    border-style:solid;
+    border-radius:2em;
+    border-width:1px;
+}
+.info-box{
+    height:40%;
+    width:100%;
+    border-radius:2em 2em 0 0;
+}
+.map{
+    height:60%;
+    width:100%;
+    border-radius: 0 0 2em 2em;
+}
+
+.best-time{
+    background-color:white;
+    width:50%;
+    height:100%;
+    float: left;
+    border-radius:2em 0 0 0;
+    padding:1em;
+}
+
+.time-chart{
+    padding:1em;
+    background-color:white;
+    width:50%;
+    height:100%;
+    float: right;
+    border-radius:0 2em 0 0;
+
+}
+
+.map-container{
+    padding:3em;
+}
+
+.destination-container{
+    padding:3em;
+    border-right-width: 1px;
+    border-right-style:solid;
+    border-right-color:grey;
+
+}
+
+.dest-btn{
+    border:none;
+    background-color:white;
+}
+
+#other{
+    display:none;
+}
+
+#other2{
+    display:none;
+}
