@@ -28,7 +28,8 @@
   </div>
 
   <div class = "jumbotron">
-    <canvas id="myChart" width= "4000px" height= "1080px"></canvas>
+    <canvas id="traffic" width= "4000px" height= "1080px"></canvas>
+    <canvas id="time" width= "4000px" height= "1080px"></canvas>
   </div>
 
   <script src="/socket.io/socket.io.js"></script>
@@ -48,13 +49,13 @@
   <script>
 
 
-
+//Line Graph
   var socket = io.connect();
 
   socket.on('connect', () => {
-    var times = [1,1,2,2,3,4,5,6,7,8,9,123,213,1312,12]
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var myChart = new Chart(ctx, {
+    var traffic = [1,1,2,2,3,4,5,6,7,8,9,123,213,1312,12]
+    var ctx = document.getElementById('traffic').getContext('2d');
+    var linegraph = new Chart(ctx, {
       type: 'line',
       data: {
         labels: ['1 AM', '2 AM', '3 AM', '4 AM', '5 AM', '6 AM', '7 AM', '8 AM',
@@ -62,7 +63,7 @@
         '5 PM','6 PM','7 PM','8 PM','9 PM','10 PM','11 PM','12 AM'],
         datasets: [{
           label: 'Traffic Measure',
-          data: times,
+          data: traffic,
           backgroundColor: [
             'rgba(255, 99, 132, 0.2)',
             'rgba(54, 162, 235, 0.2)',
@@ -94,6 +95,7 @@
     });
   });
 
+//Interactive Map
   var socket = io.connect();
   socket.on('connect', () => {
     // provided that the platform and the map are instantiated.
@@ -137,6 +139,45 @@
 
     });
 
+//Pie graphs
+    var times = [1312,12]
+    var ctx = document.getElementById('time').getContext('2d');
+    var piegraph = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['Time Spent Walking','Time Spent in Transit'],
+        datasets: [{
+          label: 'Traffic Measure',
+          data: times,
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true
+            }
+          }]
+        }
+      }
+    });
 
 
 
