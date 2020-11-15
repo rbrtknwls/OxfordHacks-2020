@@ -75,6 +75,14 @@ io.on('connection', function(socket){
 
   });
 
+  socket.on('getloc', function(indx, sender){
+    console.log("--Location Request--");
+    console.log(geocode[indx]);
+    console.log(geocode[indx + 1]);
+
+    io.to(sender).emit('postloc', geocode[indx], geocode[indx + 1]);
+  });
+
   socket.on('getgeodata', function(sender){
     console.log("--GeoData Request--");
     console.log(locations);

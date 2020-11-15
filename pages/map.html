@@ -81,7 +81,7 @@ socket.on('connect', () => {
       setTimeout(function(){
         console.log(summary);
         socket.emit("storesummary", summary)
-      },200);
+      },2000);
     }, 3000);
 
   }
@@ -148,7 +148,7 @@ socket.on('connect', () => {
       if (result.routes.length) {
 
         result.routes[0].sections.forEach((section) => {
-          summary[tab].push({
+          summary.push({
             start_place: section.arrival.place,
             start_time: section.arrival.time,
             end_place: section.departure.place,
