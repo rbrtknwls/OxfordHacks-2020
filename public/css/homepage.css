@@ -22,22 +22,24 @@
 
 .desc-box{
 align-self: center;
-width: 50%;
+width:80%;
 margin:auto;
 }
 
 @media only screen and (max-width: 800px) {
     .desc-box{
         align-self: center;
-        width: 80%;
+        width:100%;
         margin:auto;
         }
 }
 
 .home-content-box{
     text-align: center;
-    margin-top:20vh;
-    
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -70%);
 
 }
 
@@ -46,4 +48,10 @@ margin:auto;
   }
   #color2 {
     stop-color: #51B174
+  }
+
+  .logo{
+      height:7em;
+      width:7em;
+      margin:2em;
   }
