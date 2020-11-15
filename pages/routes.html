@@ -55,111 +55,143 @@
     152,632,193,139,110,238,520,1]
   var list = [];
   colours(traffic);
-
+  var totalWalk = 0.0;
+  var totalTransit = 0.0;
   socket.on('connect', () => {
-    var ctx = document.getElementById('traffic').getContext('2d');
-    var linegraph = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: ['1 AM', '2 AM', '3 AM', '4 AM', '5 AM', '6 AM', '7 AM', '8 AM',
-        '9 AM', '10 AM', '11 AM', '12 PM', '1 PM', '2 PM', '3 PM', '4 PM',
-        '5 PM','6 PM','7 PM','8 PM','9 PM','10 PM','11 PM','12 AM'],
-        datasets: [{
-          label: 'Traffic Measure',
-          data: traffic,
-          backgroundColor: list,
-          borderColor: list,
-          borderWidth: 1
-        }]
-      },
-      options: {
-        scales: {
-          yAxes: [{
-            ticks: {
-              beginAtZero: true
-            }
-          }]
-        }
-      }
-    });
+    // --------------------------- //
+
+
+    socket.emit('getsummary', socket.id);
+
+    socket.on('postsumdata', function(summary){
+      time(summary[0]);
+      graphs();
+    })
   });
 
+function graphs() {
 
-
-//Interactive Map
-  var socket = io.connect();
-  socket.on('connect', () => {
-    // provided that the platform and the map are instantiated.
-
-    var platform = new H.service.Platform({
-      'apikey': 'tDcN_f_fBqXmJjJn9zo1ljOc4DsXdB6grTAAE91t9Bo'
-    });
-    const service = platform.getXYZService({
-      token: 'AOJw_eE1TdWCkyF1ZXJHPAA'
-    });
-
-    // Obtain the default map types from the platform object:
-    var defaultLayers = platform.createDefaultLayers();
-
-    // create a provider for the public buildings data
-    const buildingsSpaceProvider = new H.service.xyz.Provider(service, 'PFOE8xNq', {
-      'min': 14
-    });
-    const buildingsSpaceLayer = new H.map.layer.TileLayer(buildingsSpaceProvider);
-    // add a layer to the map
-
-    var map = new H.Map(
-      document.getElementById('mapContainer'),
-      defaultLayers.vector.normal.map,
-      {
-        zoom: 8,
-        center: { lat: 43.6, lng: -79.3 }
-      });
-      map.addLayer(buildingsSpaceLayer);
-      // Enable the event system on the map instance:
-      var mapEvents = new H.mapevents.MapEvents(map);
-
-      // Add event listeners:
-      map.addEventListener('tap', function(evt) {
-        // Log 'tap' and 'mouse' events:
-        console.log(evt.type, evt.currentPointer.type);
-      });
-
-      // Instantiate the default behavior, providing the mapEvents object:
-      var behavior = new H.mapevents.Behavior(mapEvents);
-
-    });
-
-//Pie graphs
-    var times = [1312,12]
-    var ctx = document.getElementById('time').getContext('2d');
-    var piegraph = new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: ['Time Spent Walking','Time Spent in Transit'],
-        datasets: [{
-          label: 'Traffic Measure',
-          data: times,
-          backgroundColor: [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(255, 159, 64, 0.2)'
-          ],
-          borderColor: [
-            'rgba(255, 99, 132, 1)',
-            'rgba(54, 162, 235, 1)',
-            'rgba(255, 206, 86, 1)',
-            'rgba(75, 192, 192, 1)',
-            'rgba(153, 102, 255, 1)',
-            'rgba(255, 159, 64, 1)'
-          ],
-          borderWidth: 1
+  var ctx = document.getElementById('traffic').getContext('2d');
+  var linegraph = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['1 AM', '2 AM', '3 AM', '4 AM', '5 AM', '6 AM', '7 AM', '8 AM',
+      '9 AM', '10 AM', '11 AM', '12 PM', '1 PM', '2 PM', '3 PM', '4 PM',
+      '5 PM','6 PM','7 PM','8 PM','9 PM','10 PM','11 PM','12 AM'],
+      datasets: [{
+        label: 'Traffic Measure',
+        data: traffic,
+        backgroundColor: list,
+        borderColor: list,
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
         }]
       }
+    }
+  });
+
+  // --------------------------- //
+
+  var platform = new H.service.Platform({
+    'apikey': 'tDcN_f_fBqXmJjJn9zo1ljOc4DsXdB6grTAAE91t9Bo'
+  });
+  const service = platform.getXYZService({
+    token: 'AOJw_eE1TdWCkyF1ZXJHPAA'
+  });
+
+  // Obtain the default map types from the platform object:
+  var defaultLayers = platform.createDefaultLayers();
+
+  // create a provider for the public buildings data
+  const buildingsSpaceProvider = new H.service.xyz.Provider(service, 'PFOE8xNq', {
+    'min': 14
+  });
+  const buildingsSpaceLayer = new H.map.layer.TileLayer(buildingsSpaceProvider);
+  // add a layer to the map
+
+  var map = new H.Map(
+    document.getElementById('mapContainer'),
+    defaultLayers.vector.normal.map,
+    {
+      zoom: 8,
+      center: { lat: 43.6, lng: -79.3 }
     });
+    map.addLayer(buildingsSpaceLayer);
+    // Enable the event system on the map instance:
+    var mapEvents = new H.mapevents.MapEvents(map);
+
+    // Add event listeners:
+    map.addEventListener('tap', function(evt) {
+      // Log 'tap' and 'mouse' events:
+      console.log(evt.type, evt.currentPointer.type);
+    });
+
+    // Instantiate the default behavior, providing the mapEvents object:
+    var behavior = new H.mapevents.Behavior(mapEvents);
+
+  // --------------------------- //
+  var times = [1312,12]
+  var ctx = document.getElementById('time').getContext('2d');
+  var piegraph = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Time Spent Walking','Time Spent in Transit'],
+      datasets: [{
+        label: 'Traffic Measure',
+        data: [totalWalk.toFixed(2), totalTransit.toFixed(2)],
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.2)',
+          'rgba(54, 162, 235, 0.2)',
+        ],
+        borderColor: [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+        ],
+        borderWidth: 1
+      }]
+    }
+  });
+}
+
+function time(route) {
+  for (var i = 0; i < route[0].length; i++) {
+    var end_string = route[0][i].end_time;
+    var start_string = route[0][i].start_time;
+
+    while(end_string.charAt(0) != 'T' && start_string.charAt(0) != 'T') {
+      if(end_string.charAt(0) != 'T' && start_string.charAt(0) != 'T') {
+        end_string = end_string.substring(1);
+        start_string = start_string.substring(1);
+      }
+      else if(end_string.charAt(0) != 'T') {
+        end_string = end_string.substring(1);
+      }
+      else if (start_string.charAt(0) != 'T'){
+        start_string.substring(1);
+      }
+    }
+
+    end_string = parseFloat(end_string.substring(1,3))
+    + (parseFloat(end_string.substring(4,6)) / 60.0);
+    start_string = parseFloat(start_string.substring(1,3))
+    + (parseFloat(start_string.substring(4,6)) / 60.0);
+
+    if(route[0][i].type == "pedestrian") {
+      totalWalk +=  Math.abs(end_string - start_string);
+    }
+    else if (route[0][i].type == "transit"){
+      totalTransit += Math.abs(end_string - start_string);
+    }
+  }
+}
+
 
 function colours(traffic){
   var total = 0;
@@ -178,6 +210,35 @@ function colours(traffic){
       list.push('rgba(243, 156, 18,1)'); //Orangey Yellow
     }
   }
+}
+
+function totalTime(route) {
+  var total = 0;
+  for (var i = 0; i < route[0].length; i++) {
+    var end_string = route[0][i].end_time;
+    var start_string = route[0][i].start_time;
+
+    while(end_string.charAt(0) != 'T' && start_string.charAt(0) != 'T') {
+      if(end_string.charAt(0) != 'T' && start_string.charAt(0) != 'T') {
+        end_string = end_string.substring(1);
+        start_string = start_string.substring(1);
+      }
+      else if(end_string.charAt(0) != 'T') {
+        end_string = end_string.substring(1);
+      }
+      else if (start_string.charAt(0) != 'T'){
+        start_string.substring(1);
+      }
+    }
+
+    end_string = parseFloat(end_string.substring(1,3))
+    + (parseFloat(end_string.substring(4,6)) / 60.0);
+    start_string = parseFloat(start_string.substring(1,3))
+    + (parseFloat(start_string.substring(4,6)) / 60.0);
+
+    total += Math.abs(end_string - start_string);
+  }
+  return total;
 }
 
 

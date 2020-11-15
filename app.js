@@ -50,9 +50,9 @@ app.get('/dashboard', function (req, res) {
 server.listen(PORT);
 console.log("CHECKING PORT " + PORT)
 var RANDUSERSNUM = 10;
-var summary = []
 var locations = [];
 var geocode = [];
+var summary = []
 
 io.on('connection', function(socket){
 
@@ -62,6 +62,7 @@ io.on('connection', function(socket){
   });
 
   socket.on('storesummary', function(sum){
+    console.log(sum[0]);
     summary = sum;
   });
 
@@ -83,7 +84,7 @@ io.on('connection', function(socket){
   socket.on('getsummary', function(sender){
     console.log("--Summary Request--");
     for (var i = 0; i < summary.length; i++){
-        console.log(summary);
+        console.log(summary[i]);
     }
     io.to(sender).emit('postsumdata', summary);
   });
